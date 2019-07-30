@@ -42,18 +42,25 @@ class Item():
       self.totalSold += 1
       db = self.firebase.database()
       data = { "totalSold" : self.totalSold }
-      db.child("Items").child(self.key).update(data)
+      db.child("Items").child(self.name).update(data)
       print(self.totalSold)
 
-   def updateShippingDate(self):
-      #connect to database
+   def updateShippingDate(self, newShippingDate):
+      self.shippingDate = newShippingDate
       db = self.firebase.database()
-      
-      return 1
+      data = { "shippingDate" : self.shippingDate }
+      db.child("Items").child(self.name).update(data)
 
-   def updateDescription(self):
-      #connect to database
-      return 1
+   def updateDescription(self, newDescription):
+      self.description = newDescription
+      db = self.firebase.database()
+      data = { "description" : self.description }
+      db.child("Items").child(self.name).update(data)
+   
+   def setComplete(self):
+       if self.totalSold >= self.reqSold:
+          return True
+       return False
 
    def __str__(self):
       return ', '.join(['{key}={value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])
