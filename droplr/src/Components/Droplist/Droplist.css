@@ -1,0 +1,21 @@
+.droplistContainer {
+  border-style: solid;
+}
+
+.droplistHeader {
+  color: lightgrey;
+}
+
+.droplistSubContainer {
+  color: #32CD32;
+}
+
+.items {
+  border-style: solid;
+  border-color:#32CD32;
+}
+
+.bgGrey {
+  background-color:#343A40;
+
+}
