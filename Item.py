@@ -1,7 +1,7 @@
 import pyrebase
 
 class Item():
-   def __init__(self, name, description, cost, prevCost, reqSold, totalSold, shippingDate, tags, firebase):
+   def __init__(self, name, description, cost, prevCost, reqSold, totalSold, shippingDate, department, company, firebase):
       self.name = name
       self.description = description
       self.cost = cost
@@ -9,26 +9,22 @@ class Item():
       self.reqSold = reqSold
       self.totalSold = totalSold
       self.shippingDate = shippingDate
-      self.tags = tags
+      self.department = department
+      self.company = company
       self.firebase = firebase
  
    def uploadItem(self):
       db = self.firebase.database()
       data = {
-	 "name" : self.name,
-	 "description" : self.description,
-	 "cost" : self.cost,
-	 "prevCost" : self.prevCost,
- 	 "reqSold" : self.reqSold,
-	 "totalSold" : self.totalSold,
-	 "shippingDate" : self.shippingDate,
-         "tags" : {
-            "tag0" : self.tags[0],
-            "tag1" : self.tags[1],
-	    "tag2" : self.tags[2],
- 	    "tag3" : self.tags[3],
-	    "tag4" : self.tags[4] 
-         }
+         "name" : self.name,
+         "description" : self.description,
+         "cost" : self.cost,
+         "prevCost" : self.prevCost,
+         "reqSold" : self.reqSold,
+         "totalSold" : self.totalSold,
+         "shippingDate" : self.shippingDate,
+         "department" : self.department,
+         "company" : self.company
       }
       db.child("Items").child(self.name).set(data)
 
@@ -58,9 +54,9 @@ class Item():
       db.child("Items").child(self.name).update(data)
    
    def setComplete(self):
-       if self.totalSold >= self.reqSold:
-          return True
-       return False
+      if self.totalSold >= self.reqSold:
+         return True
+      return False
 
    def __str__(self):
       return ', '.join(['{key}={value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])

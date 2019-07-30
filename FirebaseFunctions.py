@@ -28,6 +28,11 @@ def getUserId(user, firebase):
     info = auth.get_account_info(user['idToken'])
     return info["users"][0]["localId"]
 
+def buyItemWithName(itemName, user, firebase):
+    item = getItemByName(itemName, firebase, user)
+    if item != None:
+        buyItem(item)
+
 def buyItem(item, user, firebase):
    db = firebase.database()
    data = {
@@ -39,17 +44,16 @@ def buyItem(item, user, firebase):
            "reqSold" : item.reqSold,
            "totalSold" : item.totalSold,
            "shippingDate" : item.shippingDate,
-           "tags" : {
-               "tag0" : item.tags['tag0'],
-               "tag1" : item.tags['tag1'],
-               "tag2" : item.tags['tag2'],
-               "tag3" : item.tags['tag3'],
-               "tag4" : item.tags['tag4']
-           }
+           "department" : item.department,
+           "company" : item.company
        }
    }
    db.child("Users").child(getUserId(user, firebase)).child("boughtItems").update(data, user["idToken"])
    item.totalSold += 1
+   #COME BACK and add the bucket
+   val = (item.reqSold - item.getRemainingNeeded()) / item.reqSold
+   if val >= 90:
+      db.child("bucketNearCompletion").child(item.name).set(item.getRemainingNeeded(), user["idToken"])
    db.child("Items").child(item.name).update({"totalSold" : item.totalSold},user["idToken"])
 
 def refundItem(item, user, firebase):
@@ -61,13 +65,25 @@ def refundItem(item, user, firebase):
 def uploadPicture(storage, user, name):
     storage.child("images/"+name).put(name, user["idToken"])
 
+def getItemListJSON(firebase, user):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    return resp
+
+def getItemByName(itemName, firebase, user):
+   arr = getItemList(firebase, user)
+   for item in arr:
+      if item.name == itemName
+         return item
+   return None
+
 def getItemList(firebase, user):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
     itemList = []
     for item in resp.each():
         val = item.val()
-        itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["tags"], firebase))
+        itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
     return itemList
 
 def sortByCostLowToHigh(itemList):
@@ -105,5 +121,93 @@ def getSearchItemList(firebase, user, searchTerm):
     for item in resp.each():
         val = item.val()
         if searchTerm.casefold() in val["name"].casefold():
-            itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["tags"], firebase))
+            itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
     return itemList
+
+def getSearchItemListByDepartment(firebase, user, department):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    itemList = []
+    for item in resp.each():
+        val = item.val()
+        if val["department"] == item.department:
+           itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
+    return itemList
+
+def pushToBucket(item, firebase, user):
+   db = firebase.database()
+   numSold = db.child("bucket").child(item.name).get(user["idToken"]).val()
+   if(numSold == None):
+      db.child("bucket").child(item.name).set(1,user["idToken"])
+      return
+   resp = db.child("Items").get(user["idToken"])
+   for t in resp.each():
+       val = t.val()
+       if val["name"] == item.name:
+          db.child("bucket").child(item.name).set(numSold+1,user["idToken"])
+          break
+
+def popFromBucket(item, firebase, user):
+    db = firebase.database()
+    numSold = db.child("bucket").child(item.name).get(user["idToken"]).val()
+    if numSold == 0 or numSold - 1 == 0:
+       db.child("bucket").child(item.name).remove(user["idToken"])
+       return
+    resp = db.child("Items").get(user["idToken"])
+    for t in resp.each():
+        val = t.val()
+        if val["name"] == item.name:
+            db.child("bucket").child(item.name).set(numSold-1,user["idToken"])
+            break
+
+def getBucketList(firebase, user):
+    db = firebase.database()
+    bucketList = []
+    resp = db.child("bucket").get(user["idToken"])
+    for item in resp.each():
+        bucketList.append(BucketItem(item.key(), item.val()))
+    return bucketList
+
+def printBucketList(firebase, user):
+   a = getBucketList(firebase, user)
+   for item in a:
+      print(item.name + " : " + str(item.count))
+
+def getTrendingItems(firebase, user):
+   bucketList = getBucketList(firebase, user)
+   bucketList.sort(key=lambda x: x.count, reverse=True)
+   return bucketList[0:8]
+
+def printTrendingList(firebase, user):
+   trendingList = getTrendingItems(firebase, user)
+   for item in trendingList:
+      print(item.name + " : " + str(item.count))
+
+#for other bucket
+def getNearCompletionBucketList(firebase, user):
+    db = firebase.database()
+    bucketList = []
+    resp = db.child("bucketNearCompletion").get(user["idToken"])
+    for item in resp.each():
+        bucketList.append(BucketItem(item.key(), item.val()))
+    return bucketList
+
+def printNearCompletionBucketList(firebase, user):
+    a = getNearCompletionBucketList(firebase, user)
+    for item in a:
+        print(item.name + " : " + str(item.count))
+
+def getTrendingNearCompletionItems(firebase, user):
+    bucketList = getNearCompletionBucketList(firebase, user)
+    bucketList.sort(key=lambda x: x.count, reverse=True)
+    return bucketList[0:8]
+
+def printTrendingNearCompletionList(firebase, user):
+    trendingList = getTrendingNearCompletionItems(firebase, user)
+    for item in trendingList:
+       print(item.name + " : " + str(item.count))
+
+class BucketItem:
+    def __init__(self, name, count):
+       self.name = name
+       self.count = count
