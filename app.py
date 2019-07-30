@@ -28,18 +28,26 @@ user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 def index():
     return "Hello World!"
 
-@app.route("/buyItem/<itemName>", methods="POST"])
-def buyItem():
+@app.route("/buyItem/<itemName>", methods=["POST"])
+def buyItem(itemName):
    fb.buyItemWithName(itemName, user, firebase)
+
+@app.route("/refundItem/<itemName>", methods=["DELETE"])
+def refundItem(itemName):
+   fb.refundItemWithName(itemName, user, firebase)
 
 @app.route("/getAllItems", methods=["GET"])
 def getAllItems():
    items = fb.getItemListJSON(firebase, user)
    return items
 
-@app.route("/createUser/<>")
+@app.route("/createUser/<email><password>", methods=["POST"])
+def createUser(email, password):
+   user = fb.createUser(email, password, firebase)
 
-
+@app.route("/login/<email><password>", methods=["POST"])
+def login(email, password):
+   user = fb.login(email, password, firebase)
 
 
 

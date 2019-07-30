@@ -56,6 +56,11 @@ def buyItem(item, user, firebase):
       db.child("bucketNearCompletion").child(item.name).set(item.getRemainingNeeded(), user["idToken"])
    db.child("Items").child(item.name).update({"totalSold" : item.totalSold},user["idToken"])
 
+def refundItemWithName(itemName, user, firebase):
+   item = getItemByName(itemName, firebase, user)
+   if item != None:
+      refundItem(item)
+
 def refundItem(item, user, firebase):
     db = firebase.database()
     db.child("Users").child(getUserId(user, firebase)).child("boughtItems").child(item.name).remove()
@@ -73,7 +78,7 @@ def getItemListJSON(firebase, user):
 def getItemByName(itemName, firebase, user):
    arr = getItemList(firebase, user)
    for item in arr:
-      if item.name == itemName
+      if item.name == itemName:
          return item
    return None
 
