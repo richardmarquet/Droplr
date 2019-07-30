@@ -1,0 +1,11 @@
+.sidebarContainer {
+  width: 20vw;
+  background-color:#343A40;
+
+}
+
+.profilePicture {
+  height: 20vh;
+  width: 12vw;
+  margin: 2vw;
+}

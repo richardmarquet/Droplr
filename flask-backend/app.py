@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -23,21 +23,22 @@ storage = firebase.storage()
 db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
- 
+
 @app.route('/')
 def index():
-    return "Hello World!"
-
-@app.route("/buyItem/<itemName>", methods="POST"])
-def buyItem():
-   fb.buyItemWithName(itemName, user, firebase)
-
-@app.route("/getAllItems", methods=["GET"])
-def getAllItems():
-   items = fb.getItemListJSON(firebase, user)
-   return items
-
-@app.route("/createUser/<>")
+    return render_template("index.html", token="Hello Flask+React")
+    # return "Hello World!"
+app.run(debug=True)
+# @app.route("/buyItem/<itemName>", methods="POST"])
+# def buyItem():
+#    fb.buyItemWithName(itemName, user, firebase)
+#
+# @app.route("/getAllItems", methods=["GET"])
+# def getAllItems():
+#    items = fb.getItemListJSON(firebase, user)
+#    return items
+#
+# @app.route("/createUser/<>")
 
 
 
@@ -90,4 +91,3 @@ def getAllItems():
 #item.uploadItem()
 #time.sleep(1)
 #item.updateTotalSold()
-

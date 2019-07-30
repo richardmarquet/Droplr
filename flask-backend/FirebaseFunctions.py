@@ -14,13 +14,13 @@ def login(email, password, firebase):
 def createUser(email, password, firebase):
     auth = firebase.auth()
     user = auth.create_user_with_email_and_password(email, password)
-    
+
     db = firebase.database()
     data = {
         "email" : email
     }
     db.child("Users").update({getUserId(user, firebase) : data}, user["idToken"])
-    
+
     return login(email, password, firebase)
 
 def getUserId(user, firebase):
@@ -73,7 +73,7 @@ def getItemListJSON(firebase, user):
 def getItemByName(itemName, firebase, user):
    arr = getItemList(firebase, user)
    for item in arr:
-      if item.name == itemName
+      if item.name == itemName:
          return item
    return None
 
