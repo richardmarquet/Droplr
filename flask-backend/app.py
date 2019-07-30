@@ -41,6 +41,9 @@ app.run(debug=True)
 # @app.route("/createUser/<>")
 
 
+@app.route("/login/<email><password>", methods=["POST"])
+def login(email, password):
+   user = fb.login(email, password, firebase)
 
 
 
