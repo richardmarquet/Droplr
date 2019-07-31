@@ -1,9 +1,6 @@
 from flask import Flask
-from flask import jsonify
-<<<<<<< Updated upstream
-from flask import request
-=======
->>>>>>> Stashed changes
+#from flask import jsonify
+#from flask import request
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -12,7 +9,7 @@ import json
 from Item import Item
 import pyrebase
 import time
-from collections import OrderedDict
+#from collections import OrderedDict
 from flask_cors import CORS
 
 
@@ -37,15 +34,8 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
-<<<<<<< Updated upstream
-#item = Item("Dell XPS 13","Laptop", 700, 1200, 4000, 2391, "10/12/19", "Electronics", "Dell", "true", firebase)
-#item.uploadItem()
-
-#print(fb.getItemList(firebase, user))
-#print(fb.getSearchItemListByCompany(firebase, user, "Yeti"))
-=======
-fb.getSearchItemList(firebase, user, "Asus")
->>>>>>> Stashed changes
+#fb.getSearchItemList(firebase, user, "Asus")
+print(fb.getShippedCompanyItems(firebase, user, "Yeti"))
 
 @app.route('/')
 def index():
@@ -64,18 +54,8 @@ def refundItem():
 
 @app.route("/getAllItems", methods=["GET"])
 def getAllItems():
-<<<<<<< Updated upstream
    items = fb.getItemList(firebase, user)
    return items
-=======
-    print("Sending items")
-    items = fb.getItemListJSON(firebase, user).val()
-    # for item in items.each():
-    #     print(item.val())
-    #
-    # print("Sent: ", items)
-    return jsonify(items)
->>>>>>> Stashed changes
 
 @app.route("/getSearchItemList", methods=["GET"])
 def getSearchItemList():
@@ -114,26 +94,35 @@ def getTrending():
 def getNearCompletion():
    resp = fb.getNearCompletionBucketList(firebase, user)
 
-@app.route("/enableOverflow")
+@app.route("/enableOverflow", methods=["POST"])
 def enableOverflow():
    itemName = request.args.get("itemName") 
    print("hey")   
 
-@app.route("/disableOverflow")
+@app.route("/disableOverflow", methods=["POST"])
 def disableOverflow():
    itemName = request.args.get("itemName")
    print("hey")
 
+@app.route("/getCompleteCompanyItems", methods=["GET"])
+def getCompleteCompanyItems():
+   company = request.args.get("company")
+   return fb.getCompleteCompanyItems(firebase, user, company)
 
+@app.route("/getIncompleteCompanyItems", methods=["GET"])
+def getIncompleteCompanyItems():
+   company = request.args.get("company")
+   return fb.getIncompleteCompanyItems(firebase, user, company)
 
+@app.route("/getShippedCompanyItems", methods=["GET"])
+def getShippedCompanyItems():
+   company = request.args.get("company")
+   return fb.getShippedCompanyItems(firebase, user, company)
 
-
-
-
-
-
-
-
+@app.route("/getPendingShipCompanyItems", methods=["GET"])
+def getPendingShipCompanyItems():
+   company = request.args.get("company")
+   return fb.getPendingShipCompanyItems(firebase, user, company)
 
 
 
