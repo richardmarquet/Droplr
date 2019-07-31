@@ -73,6 +73,7 @@ def uploadPicture(storage, user, name):
 def getItemListJSON(firebase, user):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
+    print(resp)
     return resp
 
 def getItemByName(itemName, firebase, user):
@@ -86,10 +87,12 @@ def getItemList(firebase, user):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
     itemList = []
+    dict = {}
     for item in resp.each():
         val = item.val()
+        dict[item.key()] = val
         itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
-    return itemList
+    return json.dumps(dict)
 
 def sortByCostLowToHigh(itemList):
     itemList.sort(key=lambda x: x.cost)
@@ -123,21 +126,27 @@ def getSearchItemList(firebase, user, searchTerm):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
     itemList = []
+    dict = {}
     for item in resp.each():
         val = item.val()
         if searchTerm.casefold() in val["name"].casefold():
+            print(val)
+            dict[item.key()] = val
             itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
-    return itemList
+                #return json.dumps({"ItemList" : dict})
+    return json.dumps(dict)
 
 def getSearchItemListByDepartment(firebase, user, department):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
     itemList = []
+    dict = {}
     for item in resp.each():
         val = item.val()
         if val["department"] == item.department:
+           dict[item.key()] = val
            itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
-    return itemList
+    return json.dumps(dict)
 
 def pushToBucket(item, firebase, user):
    db = firebase.database()
@@ -211,6 +220,15 @@ def printTrendingNearCompletionList(firebase, user):
     trendingList = getTrendingNearCompletionItems(firebase, user)
     for item in trendingList:
        print(item.name + " : " + str(item.count))
+
+def getCompanyTrends(companyName, firebase, user):
+   db = firebase.database()
+   dict = {}
+   ItemList = db.child("Companies").child(companyName).child("ItemList").get(user["idToken"])
+   for item in ItemList.each():
+       dict[item.key()] = item.val()
+   return json.dumps(dict)
+
 
 class BucketItem:
     def __init__(self, name, count):

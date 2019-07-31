@@ -1,4 +1,6 @@
 from flask import Flask
+from flask import jsonify
+from flask import request
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -24,34 +26,59 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
-fb.getSearchItemList(firebase, user, "Asus")
- 
+cc = fb.getSearchItemList(firebase, user, "Asus")
+print(cc)
+
+print("*****")
+
+cc2 = fb.getItemList(firebase, user)
+print(cc2)
+
+resp = fb.getCompanyTrends("Company", firebase, user)
+print(resp)
+
 @app.route('/')
 def index():
-    return "Hello World!"
+   return "Hello World!"
 
-@app.route("/buyItem/<itemName>", methods=["POST"])
-def buyItem(itemName):
+@app.route("/buyItem", methods=["POST"])
+def buyItem():
+   itemName = request.args.get("itemName")
    fb.buyItemWithName(itemName, user, firebase)
 
-@app.route("/refundItem/<itemName>", methods=["DELETE"])
-def refundItem(itemName):
+#EXAMPLE request: localhost:5000/refundItem?itemName=name
+@app.route("/refundItem", methods=["DELETE"])
+def refundItem():
+   itemName = request.args.get("itemName")
    fb.refundItemWithName(itemName, user, firebase)
 
 @app.route("/getAllItems", methods=["GET"])
 def getAllItems():
-   items = fb.getItemListJSON(firebase, user)
+   items = fb.getItemList(firebase, user)
    return items
 
-@app.route("/createUser/<email><password>", methods=["POST"])
+#EXAMPLE request: localhost:5000/refundItem?email=email&password=password
+@app.route("/createUser", methods=["POST"])
 def createUser(email, password):
+   email = request.args.get("email")
+   password = request.args.get("password")
    user = fb.createUser(email, password, firebase)
 
-@app.route("/login/<email><password>", methods=["POST"])
+@app.route("/login", methods=["POST"])
 def login(email, password):
+   email = request.args.get("email")
+   passsord = request.args.get("password")
    user = fb.login(email, password, firebase)
 
+@app.route("/enableOverflow")
+def enableOverflow():
+   itemName = request.args.get("itemName") 
+   print("hey")   
 
+@app.route("/disableOverflow")
+def disableOverflow():
+   itemName = request.args.get("itemName")
+   print("hey")
 
 
 
