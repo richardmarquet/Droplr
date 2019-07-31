@@ -26,17 +26,6 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
-cc = fb.getSearchItemList(firebase, user, "Asus")
-print(cc)
-
-print("*****")
-
-cc2 = fb.getItemList(firebase, user)
-print(cc2)
-
-resp = fb.getCompanyTrends("Company", firebase, user)
-print(resp)
-
 @app.route('/')
 def index():
    return "Hello World!"
@@ -59,16 +48,25 @@ def getAllItems():
 
 #EXAMPLE request: localhost:5000/refundItem?email=email&password=password
 @app.route("/createUser", methods=["POST"])
-def createUser(email, password):
+def createUser():
    email = request.args.get("email")
    password = request.args.get("password")
    user = fb.createUser(email, password, firebase)
 
 @app.route("/login", methods=["POST"])
-def login(email, password):
+def login():
    email = request.args.get("email")
    passsord = request.args.get("password")
    user = fb.login(email, password, firebase)
+
+@app.route("/getTrending", methods=["GET"])
+def getTrending():
+   resp = fb.getTrendingItems()
+   return resp
+
+@app.route("/getNearCompletion", methods=["GET"])
+def getNearCompletion():
+   resp = fb.getNearCompletionBucketList(firebase, user)
 
 @app.route("/enableOverflow")
 def enableOverflow():

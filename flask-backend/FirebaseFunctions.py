@@ -190,7 +190,10 @@ def printBucketList(firebase, user):
 def getTrendingItems(firebase, user):
    bucketList = getBucketList(firebase, user)
    bucketList.sort(key=lambda x: x.count, reverse=True)
-   return bucketList[0:8]
+   dict = {}
+   for item in bucketList[0:8]:
+      dict[item.name] = item.count
+   return json.dumps(dict)
 
 def printTrendingList(firebase, user):
    trendingList = getTrendingItems(firebase, user)
@@ -201,10 +204,13 @@ def printTrendingList(firebase, user):
 def getNearCompletionBucketList(firebase, user):
     db = firebase.database()
     bucketList = []
+    dict = {}
     resp = db.child("bucketNearCompletion").get(user["idToken"])
     for item in resp.each():
+        dict[item.key()] = item.val()
         bucketList.append(BucketItem(item.key(), item.val()))
-    return bucketList
+    return json.dumps(dict)
+
 
 def printNearCompletionBucketList(firebase, user):
     a = getNearCompletionBucketList(firebase, user)
@@ -228,6 +234,14 @@ def getCompanyTrends(companyName, firebase, user):
    for item in ItemList.each():
        dict[item.key()] = item.val()
    return json.dumps(dict)
+
+def itemListToDict(ItemList):
+   dict = {}
+   
+   for item in ItemList:
+     dict[item.name] = item.getDict()
+   
+   return dict
 
 
 class BucketItem:

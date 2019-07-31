@@ -58,5 +58,20 @@ class Item():
          return True
       return False
 
+   def getDict(self):
+      data = {
+         "name" : self.name,
+         "description" : self.description,
+         "cost" : self.cost,
+         "prevCost" : self.prevCost,
+         "reqSold" : self.reqSold,
+         "totalSold" : self.totalSold,
+         "shippingDate" : self.shippingDate,
+         "department" : self.department,
+         "company" : self.company
+      }
+      return data
+
+
    def __str__(self):
       return ', '.join(['{key}={value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])
