@@ -7,13 +7,19 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
+import MoneyGraph from '../../Components/graph2'
+import PercentGraph from '../../Components/percentGraph'
+import "./CompanyView.css"
+
+
 
 
 
 
 class CompanyView extends Component {
   state = {
-    items: this.props.items_catalog
+    items: this.props.items_catalog,
+    analytics: true
   }
 
   componentWillReceiveProps(nextProps) {
@@ -22,15 +28,19 @@ class CompanyView extends Component {
       this.setState({ items: nextProps.items_catalog});
     }
 
+    if (nextProps.analytics !== this.state.analytics) {
+      this.setState({ analytics: !this.state.analytics});
+    }
+
   }
 
   render() {
     console.log("this.state.items", this.state.items)
     return (
-      <div>
-      <Trending />
-      <Trending />
-      <Trending />
+      <div className ="companyViewContainer">
+      <PercentGraph />
+
+
     </div>)
   }
 }

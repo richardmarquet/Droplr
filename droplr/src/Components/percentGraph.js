@@ -7,10 +7,12 @@ import { VictoryLine } from 'victory';
 import { VictoryBrushContainer } from 'victory';
 import { VictoryAxis } from 'victory';
 import { VictoryStack } from 'victory';
+import { VictoryLabel } from 'victory';
 import { VictoryBar } from 'victory';
 import { VictoryTheme } from 'victory';
 import { VictoryPolarAxis } from 'victory';
 import { Bar } from 'victory';
+import './percentGraph.css'
 
 
 
@@ -24,6 +26,36 @@ const data = [
 class PercentGraph extends React.Component {
   render() {
     return (
+      <div>
+      <div className="headerTitle">Analytics: </div>
+      <span className="headerTitle">Item Revenue</span>
+      <span className="white">___________________________________________________________________________________</span>
+
+      <span className="headerTitle">Item Sales</span>
+      <span className="white">_______________________________________</span>
+      <div className="info">
+        <div style={{height: '40%', width: '40%'}}>
+          <VictoryChart
+            // adding the material theme provided with Victory
+            theme={VictoryTheme.material}
+            domainPadding={20}
+          >
+            <VictoryAxis
+              tickValues={[1, 2, 3, 4]}
+              tickFormat={["Axon 7", "1080ti", "ZeenBook 3", "ACER TV"]}
+            />
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(x) => (`$${x / 1000}k`)}
+            />
+            <VictoryBar
+              data={data}
+              x="quarter"
+              y="earnings"
+            />
+          </VictoryChart>
+        </div>
+        <div style={{height: '40%', width: '40%'}}>
       <VictoryChart
         // adding the material theme provided with Victory
         theme={VictoryTheme.material}
@@ -43,11 +75,12 @@ class PercentGraph extends React.Component {
           y="earnings"
         />
       </VictoryChart>
+      </div>
+      </div>
+      </div>
     )
   }
 }
 
 
 export default PercentGraph
-
-

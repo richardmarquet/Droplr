@@ -14,7 +14,11 @@ class Mainbody extends Component {
     items_catalog: [],
     suggested_items: [],
     sidebarOn: true,
-    userAdmin: false
+    userAdmin: false,
+    analytics: false,
+
+    company_shipped_items: [],
+    company_all_items: []
 
   }
 
@@ -56,13 +60,55 @@ class Mainbody extends Component {
     console.log("FINALL:", this.state.suggested_items.length)
      return body.data;
     }).catch(err => console.log('axios Error: ', err));
-
-
   }
+
+
+  getShippedCompanyItems() {
+    axios.get('http://127.0.0.1:5000/getShippedCompanyItems').then((body) => {
+     let items = body.data;
+     console.log("axios: ", items)
+
+     let new_company_shipped_items = []
+
+     for (let key in items) {
+        if (items.hasOwnProperty(key)) {
+            new_company_shipped_items.push(items[key]);
+        }
+    }
+    this.setState({company_shipped_items: new_company_shipped_items})
+
+     return body.data;
+    }).catch(err => console.log('axios Error: ', err));
+  }
+
+
+  getCompleteCompanyItems() {
+    axios.get('http://127.0.0.1:5000/getCompleteCompanyItems').then((body) => {
+     let items = body.data;
+     console.log("axios: ", items)
+
+     let new_company_all_items = []
+
+     for (let key in items) {
+        if (items.hasOwnProperty(key)) {
+            new_company_all_items.push(items[key]);
+        }
+    }
+    this.setState({company_all_items: new_company_all_items})
+    console.log("company_all_items", this.state.company_all_items.length)
+
+     return body.data;
+    }).catch(err => console.log('axios Error: ', err));
+  }
+
+
+
 
   componentDidMount() {
     this.getAllItemsFromFirebase();
     this.getSuggestedItemsFromFirebase();
+    this.getCompleteCompanyItems();
+    this.getShippedCompanyItems()
 
    }
 
@@ -74,20 +120,23 @@ class Mainbody extends Component {
 
    }
 
-
+   toggleAnalytics() {
+     console.log("toggling: ", this.state.analytics)
+     this.setState({ analytics: !this.state.analytics});
+   }
 
   render() {
     return(
     <div className ="info">
       {(this.state.sidebarOn) ? (
-        <Sidebar />
+        <Sidebar userAdmin = {this.state.userAdmin} toggleAnalytics = {this.toggleAnalytics.bind(this)}/>
       ) : console.log("sidebar off")}
 
 
         <div className= "infoCol">
         {(!this.state.userAdmin) ? <Trending/> : console.log("okay")}
           <div className ="info">
-          {(this.state.userAdmin) ? <CompanyView /> : <CustomerView items_catalog = {this.state.items_catalog}  />}
+          {(this.state.userAdmin) ? <CompanyView analytics = { this.state.analytics} /> : <CustomerView items_catalog = {this.state.items_catalog}  />}
             {(!this.state.sidebarOn && !this.state.userAdmin) ? <Suggested suggested_items = { this.state.suggested_items } /> : console.log("sidebar on")}
             </div>
         </div>

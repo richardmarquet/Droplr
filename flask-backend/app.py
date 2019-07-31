@@ -193,22 +193,22 @@ def disableOverflow():
 
 @app.route("/getCompleteCompanyItems", methods=["GET"])
 def getCompleteCompanyItems():
-   company = request.args.get("company")
+   company = "JBL"
    return fb.getCompleteCompanyItems(firebase, user, company)
 
 @app.route("/getIncompleteCompanyItems", methods=["GET"])
 def getIncompleteCompanyItems():
-   company = request.args.get("company")
+   company = "JBL"
    return fb.getIncompleteCompanyItems(firebase, user, company)
 
 @app.route("/getShippedCompanyItems", methods=["GET"])
 def getShippedCompanyItems():
-   company = request.args.get("company")
+   company = "JBL"
    return fb.getShippedCompanyItems(firebase, user, company)
 
 @app.route("/getPendingShipCompanyItems", methods=["GET"])
 def getPendingShipCompanyItems():
-   company = request.args.get("company")
+   company = "JBL"
    return fb.getPendingShipCompanyItems(firebase, user, company)
 
 
