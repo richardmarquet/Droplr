@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -24,22 +24,28 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
+fb.getSearchItemList(firebase, user, "Asus")
+ 
 @app.route('/')
 def index():
-    return render_template("index.html", token="Hello Flask+React")
-    # return "Hello World!"
-app.run(debug=True)
-# @app.route("/buyItem/<itemName>", methods="POST"])
-# def buyItem():
-#    fb.buyItemWithName(itemName, user, firebase)
-#
-# @app.route("/getAllItems", methods=["GET"])
-# def getAllItems():
-#    items = fb.getItemListJSON(firebase, user)
-#    return items
-#
-# @app.route("/createUser/<>")
+    return "Hello World!"
 
+@app.route("/buyItem/<itemName>", methods=["POST"])
+def buyItem(itemName):
+   fb.buyItemWithName(itemName, user, firebase)
+
+@app.route("/refundItem/<itemName>", methods=["DELETE"])
+def refundItem(itemName):
+   fb.refundItemWithName(itemName, user, firebase)
+
+@app.route("/getAllItems", methods=["GET"])
+def getAllItems():
+   items = fb.getItemListJSON(firebase, user)
+   return items
+
+@app.route("/createUser/<email><password>", methods=["POST"])
+def createUser(email, password):
+   user = fb.createUser(email, password, firebase)
 
 @app.route("/login/<email><password>", methods=["POST"])
 def login(email, password):
@@ -94,3 +100,4 @@ def login(email, password):
 #item.uploadItem()
 #time.sleep(1)
 #item.updateTotalSold()
+

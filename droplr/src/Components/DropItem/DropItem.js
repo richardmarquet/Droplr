@@ -1,7 +1,8 @@
 import React from 'react';
 import './DropItem.css'
-import { ProgressBar } from 'bootstrap'
+// import { ProgressBar } from 'bootstrap'
 
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 
 

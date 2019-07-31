@@ -1,12 +1,24 @@
 import React from 'react';
 import './Trending.css'
-import { Carousel } from 'react-bootstrap'
+// import { Carousel } from 'react-bootstrap'
 import DropItem from '../../Components/DropItem/DropItem';
 import TrendingItem from '../../Components/TrendingItem/TrendingItem';
-import { Row } from 'react-bootstrap'
-import { Col } from 'react-bootstrap'
-import { Jumbotron } from 'react-bootstrap'
-import { Container } from 'bootstrap'
+// import { Row } from 'react-bootstrap'
+// import { Col } from 'react-bootstrap'
+// import { Jumbotron } from 'react-bootstrap'
+// import { Container } from 'bootstrap'
+
+import Jumbotron from 'react-bootstrap/Jumbotron'
+import Carousel from 'react-bootstrap/Carousel'
+
+import Image from 'react-bootstrap/Image'
+import Navbar from 'react-bootstrap/Navbar'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Table from 'react-bootstrap/Table'
+import Container from 'react-bootstrap/Container'
+
+
 
 
 

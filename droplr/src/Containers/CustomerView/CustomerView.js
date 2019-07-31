@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import DropItem from '../../Components/DropItem/DropItem';
 import Trending from '../../Components/Trending/Trending'
-import { Image } from 'react-bootstrap'
-import { Col } from 'react-bootstrap'
-import { Row } from 'react-bootstrap'
-import { Table } from 'react-bootstrap'
-import { Container } from 'bootstrap'
+// import { Image } from 'react-bootstrap'
+// import { Col } from 'react-bootstrap'
+// import { Row } from 'react-bootstrap'
+// import { Table } from 'react-bootstrap'
+// import { Container } from 'bootstrap'
+
+
+import Image from 'react-bootstrap/Image'
+import Navbar from 'react-bootstrap/Navbar'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Table from 'react-bootstrap/Table'
+import Container from 'react-bootstrap/Container'
+
 
 
 
