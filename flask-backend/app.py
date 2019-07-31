@@ -1,9 +1,6 @@
 from flask import Flask
 from flask import jsonify
-<<<<<<< Updated upstream
 from flask import request
-=======
->>>>>>> Stashed changes
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -14,6 +11,9 @@ import pyrebase
 import time
 from collections import OrderedDict
 from flask_cors import CORS
+import tensorflow as tf
+import sys
+
 
 
 app = Flask(__name__)
@@ -37,15 +37,93 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
-<<<<<<< Updated upstream
-#item = Item("Dell XPS 13","Laptop", 700, 1200, 4000, 2391, "10/12/19", "Electronics", "Dell", "true", firebase)
-#item.uploadItem()
 
-#print(fb.getItemList(firebase, user))
-#print(fb.getSearchItemListByCompany(firebase, user, "Yeti"))
-=======
-fb.getSearchItemList(firebase, user, "Asus")
->>>>>>> Stashed changes
+def getKNN(predicitionPoint, features, labels, k):
+    val = tf.pow(tf.pow(tf.subtract(features, predicitionPoint), 2), 2)
+    val_sum = tf.reduce_sum(val, 1)
+    val_float = tf.to_float(val_sum)
+    val_sqrt = tf.sqrt(val_sum)
+    val_expand = tf.expand_dims(val_sqrt, 1);
+    labels = tf.to_float(labels);
+
+    print("val_expand", val_expand)
+    val_concat = tf.concat([val_expand, labels], 1)
+    # print("****!!!!!!!!!!!!!!!!val_concat: ",val_concat)
+    val_unstack = tf.unstack(val_concat)
+    print("****!!!!!!!!!!!!!!!!val_unstack: ",val_unstack)
+
+    sess = tf.InteractiveSession()
+    val_sort = sorted(val_unstack, key=lambda x:x.eval().tolist()[0])
+    print("****!!!!!!!!!!!!!!!!val_sort: ",val_sort)
+
+    val_slice = val_sort[0: k]
+
+    return val_slice
+
+def jsonArrayConverter(inarray):
+  jsonObj = json.loads(inarray)
+  features = []
+  labels = []
+  element = 0
+  money = 0
+  # print("ITEMMM TYPE: ", type(jsonObj))
+  # print("ITEMMM: ", jsonObj)
+  for item in jsonObj:
+    print("ITEMMM: ", jsonObj[item])
+    department = 0.0
+    money = 0.0
+    days = 0.0
+
+    for key in jsonObj[item]:
+        if key == ("department"):
+            if jsonObj[item][key] == ("Appliances"):
+              department = 0.25
+            elif jsonObj[item][key] == ("Clothing"):
+              department = 0.5
+            elif jsonObj[item][key] == ("Outdoors"):
+              department = 0.75
+            elif jsonObj[item][key] == ("health"):
+              department = 0.1
+        elif key == ("cost"):
+            money = jsonObj[item][key]/ 5000.0
+        elif key == "shippingDate":
+            days = jsonObj[item][key]/ 60.0
+        elif (key == "name"):
+            labels.append(jsonObj[item][key])
+    features.append([department, money, days])
+    money = 0
+    days = 0
+  return [features, labels]
+
+
+@app.route('/getSuggestedItems')
+def runTensor():
+    allitems = fb.getItemList(firebase, user)
+    results = jsonArrayConverter(allitems)
+    playlist_features = results[0]
+    labels = results[1]
+    playlist_labels = [i for i in range(0, len(labels))]
+
+    target_features= [.01,.1,.05]
+    k = 5
+
+
+    tffeatures = tf.constant(playlist_features);
+    tflabels = tf.expand_dims(tf.constant(playlist_labels), 1);
+    tfpred = tf.constant(target_features);
+
+    arr = getKNN(tfpred, tffeatures, tflabels, k)
+    item_names = []
+    pos = 0
+    for item in arr:
+        item_names.append(labels[int(item.eval().tolist()[1])])
+        print(labels[int(item.eval().tolist()[1])])
+        pos += 1
+
+    return jsonify({"closest_items": item_names})
+
+
+
 
 @app.route('/')
 def index():
@@ -64,19 +142,8 @@ def refundItem():
 
 @app.route("/getAllItems", methods=["GET"])
 def getAllItems():
-<<<<<<< Updated upstream
    items = fb.getItemList(firebase, user)
    return items
-=======
-    print("Sending items")
-    items = fb.getItemListJSON(firebase, user).val()
-    # for item in items.each():
-    #     print(item.val())
-    #
-    # print("Sent: ", items)
-    return jsonify(items)
->>>>>>> Stashed changes
-
 @app.route("/getSearchItemList", methods=["GET"])
 def getSearchItemList():
    searchTerm = request.args.get("searchTerm")
@@ -116,27 +183,13 @@ def getNearCompletion():
 
 @app.route("/enableOverflow")
 def enableOverflow():
-   itemName = request.args.get("itemName") 
-   print("hey")   
+   itemName = request.args.get("itemName")
+   print("hey")
 
 @app.route("/disableOverflow")
 def disableOverflow():
    itemName = request.args.get("itemName")
    print("hey")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
