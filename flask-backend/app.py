@@ -26,6 +26,11 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
+#item = Item("Dell XPS 13","Laptop", 700, 1200, 4000, 2391, "10/12/19", "Electronics", "Dell", "true", firebase)
+#item.uploadItem()
+
+#print(fb.getItemList(firebase, user))
+
 @app.route('/')
 def index():
    return "Hello World!"

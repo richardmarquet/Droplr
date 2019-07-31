@@ -45,6 +45,7 @@ def buyItem(item, user, firebase):
            "totalSold" : item.totalSold,
            "shippingDate" : item.shippingDate,
            "department" : item.department,
+           "canOverflow" : item.canOverflow,
            "company" : item.company
        }
    }
@@ -91,7 +92,7 @@ def getItemList(firebase, user):
     for item in resp.each():
         val = item.val()
         dict[item.key()] = val
-        itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
+    #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
     return json.dumps(dict)
 
 def sortByCostLowToHigh(itemList):
@@ -132,7 +133,7 @@ def getSearchItemList(firebase, user, searchTerm):
         if searchTerm.casefold() in val["name"].casefold():
             print(val)
             dict[item.key()] = val
-            itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
+            #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
                 #return json.dumps({"ItemList" : dict})
     return json.dumps(dict)
 
@@ -145,7 +146,7 @@ def getSearchItemListByDepartment(firebase, user, department):
         val = item.val()
         if val["department"] == item.department:
            dict[item.key()] = val
-           itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], firebase))
+           #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
     return json.dumps(dict)
 
 def pushToBucket(item, firebase, user):
