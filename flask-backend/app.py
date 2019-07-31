@@ -30,6 +30,7 @@ user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 #item.uploadItem()
 
 #print(fb.getItemList(firebase, user))
+#print(fb.getSearchItemListByCompany(firebase, user, "Yeti"))
 
 @app.route('/')
 def index():

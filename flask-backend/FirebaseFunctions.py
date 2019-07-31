@@ -137,6 +137,18 @@ def getSearchItemList(firebase, user, searchTerm):
                 #return json.dumps({"ItemList" : dict})
     return json.dumps(dict)
 
+def getSearchItemListByCompany(firebase, user, company):
+   db = firebase.database()
+   resp = db.child("Items").get(user["idToken"])
+   itemList = []
+   dict = {}
+   for item in resp.each():
+      val = item.val()
+      if val["company"] == company:
+         dict[item.key()] = val
+    #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
+   return json.dumps(dict)
+
 def getSearchItemListByDepartment(firebase, user, department):
     db = firebase.database()
     resp = db.child("Items").get(user["idToken"])
@@ -144,7 +156,7 @@ def getSearchItemListByDepartment(firebase, user, department):
     dict = {}
     for item in resp.each():
         val = item.val()
-        if val["department"] == item.department:
+        if val["department"] == department:
            dict[item.key()] = val
            #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
     return json.dumps(dict)
