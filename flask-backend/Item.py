@@ -1,7 +1,7 @@
 import pyrebase
 
 class Item():
-   def __init__(self, name, description, cost, prevCost, reqSold, totalSold, shippingDate, department, company, canOverflow, firebase):
+   def __init__(self, name, description, cost, prevCost, reqSold, totalSold, shippingDate, department, company, canOverflow, picture, firebase):
       self.name = name
       self.description = description
       self.cost = cost
@@ -12,6 +12,7 @@ class Item():
       self.department = department
       self.company = company
       self.canOverflow = canOverflow
+      self.picture = picture
       self.firebase = firebase
  
    def uploadItem(self):
@@ -26,6 +27,7 @@ class Item():
          "shippingDate" : self.shippingDate,
          "department" : self.department,
          "canOverflow" : self.canOverflow,
+         "picture" : self.picture,
          "company" : self.company
       }
       db.child("Items").child(self.name).set(data)
@@ -71,6 +73,7 @@ class Item():
          "shippingDate" : self.shippingDate,
          "department" : self.department,
          "canOverflow" : self.canOverflow,
+         "picture" : self.picture,
          "company" : self.company
       }
       return data

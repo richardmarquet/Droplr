@@ -9,7 +9,7 @@ import json
 from Item import Item
 import pyrebase
 import time
-from collections import OrderedDict
+#from collections import OrderedDict
 from flask_cors import CORS
 import tensorflow as tf
 import sys
@@ -181,15 +181,38 @@ def getTrending():
 def getNearCompletion():
    resp = fb.getNearCompletionBucketList(firebase, user)
 
-@app.route("/enableOverflow")
+@app.route("/enableOverflow", methods=["POST"])
 def enableOverflow():
    itemName = request.args.get("itemName")
    print("hey")
 
-@app.route("/disableOverflow")
+@app.route("/disableOverflow", methods=["POST"])
 def disableOverflow():
    itemName = request.args.get("itemName")
    print("hey")
+
+@app.route("/getCompleteCompanyItems", methods=["GET"])
+def getCompleteCompanyItems():
+   company = request.args.get("company")
+   return fb.getCompleteCompanyItems(firebase, user, company)
+
+@app.route("/getIncompleteCompanyItems", methods=["GET"])
+def getIncompleteCompanyItems():
+   company = request.args.get("company")
+   return fb.getIncompleteCompanyItems(firebase, user, company)
+
+@app.route("/getShippedCompanyItems", methods=["GET"])
+def getShippedCompanyItems():
+   company = request.args.get("company")
+   return fb.getShippedCompanyItems(firebase, user, company)
+
+@app.route("/getPendingShipCompanyItems", methods=["GET"])
+def getPendingShipCompanyItems():
+   company = request.args.get("company")
+   return fb.getPendingShipCompanyItems(firebase, user, company)
+
+
+
 
 
 

@@ -64,7 +64,7 @@ def refundItemWithName(itemName, user, firebase):
 
 def refundItem(item, user, firebase):
     db = firebase.database()
-    db.child("Users").child(getUserId(user, firebase)).child("boughtItems").child(item.name).remove()
+    db.child("Users").child(getUserId(user, firebase)).child("boughtItems").child(item.name).remove(user["idToken"])
     item.totalSold -= 1
     db.child("Items").child(item.name).update({"totalSold" : item.totalSold},user["idToken"])
 
@@ -148,6 +148,54 @@ def getSearchItemListByCompany(firebase, user, company):
          dict[item.key()] = val
     #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
    return json.dumps(dict)
+
+def getCompleteCompanyItems(firebase, user, company):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    itemList = []
+    dict = {}
+    for item in resp.each():
+        val = item.val()
+        if val["company"] == company and val["reqSold"] <= val["totalSold"]:
+            dict[item.key()] = val
+                #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
+    return json.dumps(dict)
+
+def getIncompleteCompanyItems(firebase, user, company):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    itemList = []
+    dict = {}
+    for item in resp.each():
+        val = item.val()
+        if val["company"] == company and val["reqSold"] > val["totalSold"]:
+            dict[item.key()] = val
+    #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
+    return json.dumps(dict)
+
+def getShippedCompanyItems(firebase, user, company):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    itemList = []
+    dict = {}
+    for item in resp.each():
+        val = item.val()
+        if val["company"] == company and val["isShipped"] == "true":
+            dict[item.key()] = val
+    #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
+    return json.dumps(dict)
+
+def getPendingShipCompanyItems(firebase, user, company):
+    db = firebase.database()
+    resp = db.child("Items").get(user["idToken"])
+    itemList = []
+    dict = {}
+    for item in resp.each():
+        val = item.val()
+        if val["company"] == company and val["isShipped"] == "false":
+            dict[item.key()] = val
+    #itemList.append(Item(val["name"], val["description"], val["cost"], val["prevCost"], val["reqSold"], val["totalSold"], val["shippingDate"], val["department"], val["company"], val["canOverflow"], firebase))
+    return json.dumps(dict)
 
 def getSearchItemListByDepartment(firebase, user, department):
     db = firebase.database()
