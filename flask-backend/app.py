@@ -52,6 +52,21 @@ def getAllItems():
    items = fb.getItemList(firebase, user)
    return items
 
+@app.route("/getSearchItemList", methods=["GET"])
+def getSearchItemList():
+   searchTerm = request.args.get("searchTerm")
+   return fb.getSearchItemList(firebase, user, searchTerm)
+
+@app.route("/getSearchItemListByCompany", methods=["GET"])
+def getSearchItemListByCompany():
+   company = request.args.get("company")
+   return fb.getSearchItemListByCompany(firebase, user, company)
+
+@app.route("/getSearchItemListByDepartment", methods=["GET"])
+def getSearchItemListByDepartment():
+   department = request.args.get("department")
+   return fb.getSearchItemListByDepartment(firebase, user, department)
+
 #EXAMPLE request: localhost:5000/refundItem?email=email&password=password
 @app.route("/createUser", methods=["POST"])
 def createUser():
