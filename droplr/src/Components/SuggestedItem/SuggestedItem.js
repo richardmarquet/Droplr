@@ -1,21 +1,20 @@
 import React from 'react';
-import './DropItem.css'
+import './SuggestedItem.css'
 // import { ProgressBar } from 'bootstrap'
-
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 
 
-const dropItem = (props) => {
+const trendingItem = (props) => {
   const now = 60;
 
   return(
-  <div className="dropItemContainer">
+  <div className="suggestedItemItemContainer">
     <img src={ props.image } className="itemPicture"/>
-    <p><b>{ props.item_name }</b></p>
+    <p><b>Amazon Echo</b></p>
     <ProgressBar striped variant="info" now={now} label={`${now}%`} />
-    <span className="strikedPrice">{ props.item_prevCost }    </span><span>   $300</span>
+    <span className="strikedPrice">$450    </span><span>   $300</span>
   </div>)
 }
 
-export default dropItem;
+export default trendingItem;

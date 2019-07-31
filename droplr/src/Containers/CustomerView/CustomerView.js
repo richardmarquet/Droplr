@@ -24,27 +24,28 @@ import Container from 'react-bootstrap/Container'
 
 class CustomerView extends Component {
   state = {
-    items: [{img: 'https://i.ya-webdesign.com/images/png-with-transparent-background.png'},
-  {img: 'https://i.ya-webdesign.com/images/png-with-transparent-background.png'},
-  {img: 'https://i.ya-webdesign.com/images/png-with-transparent-background.png'},
-  {img: 'https://i.ya-webdesign.com/images/png-with-transparent-background.png'},
-  {img: 'https://cms.qz.com/wp-content/uploads/2016/05/amazonechodotfronton-e1463797661349.jpg?quality=75&strip=all&w=410&h=240.8018471872376'},
-  {img: 'https://cms.qz.com/wp-content/uploads/2016/05/amazonechodotfronton-e1463797661349.jpg?quality=75&strip=all&w=410&h=240.8018471872376'},
-  {img: 'https://cms.qz.com/wp-content/uploads/2016/05/amazonechodotfronton-e1463797661349.jpg?quality=75&strip=all&w=410&h=240.8018471872376'},
-  {img: 'https://cms.qz.com/wp-content/uploads/2016/05/amazonechodotfronton-e1463797661349.jpg?quality=75&strip=all&w=410&h=240.8018471872376'},
-  {img: 'https://cms.qz.com/wp-content/uploads/2016/05/amazonechodotfronton-e1463797661349.jpg?quality=75&strip=all&w=410&h=240.8018471872376'}]
-}
+    items: this.props.items_catalog
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if (nextProps.items_catalog !== this.state.items) {
+      this.setState({ items: nextProps.items_catalog});
+    }
+
+  }
 
   render() {
+    console.log("this.state.items", this.state.items)
     return (
       <div>
-      <Trending />
       <Container>
         <Row>
         {this.state.items.map((item, index )=> {
+          console.log(item)
           return(
             <Col xs={6} md={4}>
-              <DropItem image = {item.img} />
+              <DropItem image = {"https://i.ebayimg.com/images/g/UvQAAOSwB1Jasui-/s-l225.jpg"} item_name = {item.name} item_prevCost = {item.prevCost} item_reqSold= {item.reqSold}   />
             </Col>)
         })}
         </Row>
@@ -52,6 +53,7 @@ class CustomerView extends Component {
     </div>)
   }
 }
+
 
 
 export default CustomerView;

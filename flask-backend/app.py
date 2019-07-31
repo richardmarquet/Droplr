@@ -1,6 +1,9 @@
 from flask import Flask
 from flask import jsonify
+<<<<<<< Updated upstream
 from flask import request
+=======
+>>>>>>> Stashed changes
 import algorithms as algo
 import FirebaseFunctions as fb
 import numpy as np
@@ -9,8 +12,16 @@ import json
 from Item import Item
 import pyrebase
 import time
+from collections import OrderedDict
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
+
+# cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+# app.config['CORS_HEADERS'] = 'Content-Type'
+#
 
 config = {
     "apiKey": "AIzaSyCXsfhpkG-zZ_PfS8q66TqATunM4_dqTQ4",
@@ -26,11 +37,15 @@ db = firebase.database()
 
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
+<<<<<<< Updated upstream
 #item = Item("Dell XPS 13","Laptop", 700, 1200, 4000, 2391, "10/12/19", "Electronics", "Dell", "true", firebase)
 #item.uploadItem()
 
 #print(fb.getItemList(firebase, user))
 #print(fb.getSearchItemListByCompany(firebase, user, "Yeti"))
+=======
+fb.getSearchItemList(firebase, user, "Asus")
+>>>>>>> Stashed changes
 
 @app.route('/')
 def index():
@@ -49,8 +64,18 @@ def refundItem():
 
 @app.route("/getAllItems", methods=["GET"])
 def getAllItems():
+<<<<<<< Updated upstream
    items = fb.getItemList(firebase, user)
    return items
+=======
+    print("Sending items")
+    items = fb.getItemListJSON(firebase, user).val()
+    # for item in items.each():
+    #     print(item.val())
+    #
+    # print("Sent: ", items)
+    return jsonify(items)
+>>>>>>> Stashed changes
 
 #EXAMPLE request: localhost:5000/refundItem?email=email&password=password
 @app.route("/createUser", methods=["POST"])
@@ -131,4 +156,3 @@ def disableOverflow():
 #item.uploadItem()
 #time.sleep(1)
 #item.updateTotalSold()
-

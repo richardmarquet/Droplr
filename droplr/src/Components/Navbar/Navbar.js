@@ -11,7 +11,7 @@ const NavbarMod = (props) => {
   return (
     <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="#home">
-        <img src={ncr_logo} className="logo" />
+        <img src={ncr_logo} className="logo" onClick={props.toggleSideBar}/>
         <span className="header" >Droplr</span>
       </Navbar.Brand>
     </Navbar>)
