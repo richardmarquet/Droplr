@@ -35,7 +35,10 @@ db = firebase.database()
 user = fb.login("cooltest9@gmail.com", "test12345", firebase)
 
 #fb.getSearchItemList(firebase, user, "Asus")
-print(fb.getShippedCompanyItems(firebase, user, "Yeti"))
+#print(fb.getShippedCompanyItems(firebase, user, "Yeti"))
+
+#item = Item("Bose QuietComfort 35","BlueTooth Headphones", 150, 350, 700, 698, 15, "Electronics", "Bose", "true", "nan", firebase)
+#item.uploadItem()
 
 @app.route('/')
 def index():
